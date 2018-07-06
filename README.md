@@ -36,7 +36,7 @@ First, make sure that you have git on your computer configured with the same mai
 
 * Run `git init` to initialize a git repo in this directory
 
-* Run `git remote add origin https://github.com/blazej-jastrzebski-tooploox/academy_graduation_game.git` to set our GitHub repo as a remote repository that you will use to collaborate.
+* Run `git remote add origin https://github.com/Python-Basics-Graduation/academy_graduation_game.git` to set our GitHub repo as a remote repository that you will use to collaborate.
 
 * Run `git pull origin master` to download the code from the master branch into the directory.
 
