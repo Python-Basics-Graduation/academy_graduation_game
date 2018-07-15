@@ -28,13 +28,27 @@ class Cell:
 
 
 def draw_background(win_width, win_height,
-                    board_width, board_height, cell_size):
+                    board_width, board_height, columns_num, rows_num):
     board_vertices = calculate_board_vertices(win_width, win_height,
                                               board_width, board_height)
+    cell_size = calculate_cell_size(board_width, board_height,
+                                    columns_num, rows_num)
     batch = pyglet.graphics.Batch()
     draw_board(board_vertices, batch)
-    draw_cells(board_vertices[0][0], board_vertices[0][1], cell_size, batch)
+    draw_cells(board_vertices[0][0], board_vertices[0][1],
+               cell_size, columns_num, rows_num, batch)
     batch.draw()
+
+
+def calculate_cell_size(board_width, board_height, columns_num, rows_num):
+    if (board_width // columns_num == board_height // rows_num and
+            board_width % columns_num == 0 and
+            board_height % rows_num == 0):
+        cell_size = board_width // columns_num
+        return cell_size
+    else:
+        raise ValueError("Incorrect board dimensions or numbers of "
+                         "columns/rows. Cells must be square.")
 
 
 def draw_board(board_vertices, batch):
@@ -46,11 +60,12 @@ def draw_board(board_vertices, batch):
               )
 
 
-def draw_cells(board_left, board_bottom, cell_size, batch):
+def draw_cells(board_left, board_bottom, cell_size,
+               columns_num, rows_num, batch):
     position_x = board_left
     position_y = board_bottom
-    for column in range(9):
-        for row in range(16):
+    for column in range(rows_num):
+        for row in range(columns_num):
             cell = Cell(position_x, position_y, cell_size, 0)
             cell.add_cell_to_batch(batch)
             position_x += cell_size
