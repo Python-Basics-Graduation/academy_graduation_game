@@ -1,52 +1,72 @@
 import pyglet
 from pyglet.window import mouse
+from pyglet_gui.theme import Theme
 
+cell_size = 50
 
-def draw_board(win_width, win_height, board_width, board_height):
+class Cell:
+    def __init__(self, position_x, position_y, cell_size, state):
+        self.position_x = position_x    #position is bottom left corner
+        self.position_y = position_y
+        self.cell_size = cell_size
+        self.state = state
+
+    def create_vertex_list(self, batch):
+        left = self.position_x
+        right = self.position_x + self.cell_size
+        bottom = self.position_y
+        top = self.position_y + self.cell_size
+
+        vertex_list = batch.add(5, pyglet.gl.GL_LINE_STRIP, None,
+        ('v2i', (left, bottom,
+                right, bottom,
+                right, top,
+                left, top,
+                left, bottom)),
+        ('c3B', (0, 0, 255, 0, 0, 255, 0, 0, 255, 0, 0, 255, 0, 0, 255)))
+        #return vertex_list
+
+    def draw_cell(self):
+        vertex_list = self.create_vertex_list()
+        vertex_list.draw(pyglet.gl.GL_LINE_STRIP)
+
+def draw_background(win_width, win_height, board_width, board_height):
     board_vertices = calculate_board_vertices(win_width, win_height, board_width, board_height)
-
     batch = pyglet.graphics.Batch()
+    draw_board(board_vertices, batch)
+    draw_cells(board_vertices[0][0], board_vertices[0][1], cell_size, batch)
+    batch.draw()
 
-    pyglet.gl.glLineWidth(1)
-
+def draw_board(board_vertices, batch):
     batch.add(4, pyglet.gl.GL_QUADS, None,
         ('v2i', (board_vertices[0][0], board_vertices[0][1],
                  board_vertices[1][0], board_vertices[1][1],
                  board_vertices[2][0], board_vertices[2][1],
                  board_vertices[3][0], board_vertices[3][1]))
     )
-    for hor_line in range(1,9):
-        batch.add(2, pyglet.gl.GL_LINES, None,
-            ('v2i', (board_vertices[0][0], board_vertices[0][1] + 50*hor_line,
-                     board_vertices[1][0], board_vertices[1][1] + 50*hor_line)),
-            ('c3B', (0, 0, 255, 0, 0, 255))
-            )
-    for ver_line in range(1,16):
-        batch.add(2, pyglet.gl.GL_LINES, None,
-            ('v2i', (board_vertices[0][0] + 50*ver_line, board_vertices[0][1],
-                     board_vertices[3][0] + 50*ver_line, board_vertices[3][1])),
-            ('c3B', (0, 0, 255, 0, 0, 255))
-            )
-    batch.draw()
 
 
+def draw_cells(board_left, board_bottom, cell_size, batch):
+    position_x = board_left
+    position_y = board_bottom
+    for column in range(9):
+        for row in range(16):
+            cell = Cell(position_x, position_y, cell_size, 0)
+            cell.create_vertex_list(batch)
+            position_x += cell_size
+        position_x = board_left
 
-def on_mouse_press(x, y, button, modifiers):
-    if button == mouse.LEFT:
-        pass
+#the drawing cursor must return to the starting position of the new row:
+        batch.add(1, pyglet.gl.GL_LINE_STRIP, None,
+        ('v2i', (position_x, position_y)),
+        ('c3B', (0, 0, 255)))
 
-def on_mouse_enter(x, y):
-    pass
-
-def on_mouse_leave(x, y):
-    pass
+        position_y += cell_size
 
 
-def calculate_board_size(width, height):
-    pass
 
 def calculate_board_vertices(win_width, win_height, board_width, board_height):
-    if (win_width > board_width) & (win_height > board_height):
+    if (win_width >= board_width) & (win_height >= board_height):
         left = (win_width - board_width) // 2
         right = left + board_width
         bottom = (win_height - board_height) * 3 // 4
@@ -60,15 +80,6 @@ def calculate_board_vertices(win_width, win_height, board_width, board_height):
         return board_vertices
     else:
          raise ValueError("The Window size must be bigger than the Board size")
-
-def calculate_cell_size(width, height):
-    pass
-
-
-def calculate_current_cell_vertices(x_pointer, y_pointer, board_vertices, cell_size):
-    pass
-
-
 
 if __name__ == '__main__':
     pyglet.app.run()
