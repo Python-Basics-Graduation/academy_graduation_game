@@ -11,7 +11,7 @@ class Cell:
         self.cell_size = cell_size
         self.state = state
 
-    def create_vertex_list(self, batch):
+    def add_cell_to_batch(self, batch):
         left = self.position_x
         right = self.position_x + self.cell_size
         bottom = self.position_y
@@ -24,11 +24,7 @@ class Cell:
                 left, top,
                 left, bottom)),
         ('c3B', (0, 0, 255, 0, 0, 255, 0, 0, 255, 0, 0, 255, 0, 0, 255)))
-        #return vertex_list
 
-    def draw_cell(self):
-        vertex_list = self.create_vertex_list()
-        vertex_list.draw(pyglet.gl.GL_LINE_STRIP)
 
 def draw_background(win_width, win_height, board_width, board_height):
     board_vertices = calculate_board_vertices(win_width, win_height, board_width, board_height)
@@ -52,7 +48,7 @@ def draw_cells(board_left, board_bottom, cell_size, batch):
     for column in range(9):
         for row in range(16):
             cell = Cell(position_x, position_y, cell_size, 0)
-            cell.create_vertex_list(batch)
+            cell.add_cell_to_batch(batch)
             position_x += cell_size
         position_x = board_left
 
