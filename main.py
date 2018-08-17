@@ -4,7 +4,7 @@ from pyglet.window import mouse
 
 
 game_window = pyglet.window.Window(width=1240,height=720,caption="Simon's War",resizable=False)
-game_window.push_handlers(pyglet.window.event.WindowEventLogger())
+# game_window.push_handlers(pyglet.window.event.WindowEventLogger())
 cursor = pyglet.window.ImageMouseCursor(resources.cursor,16,8)
 game_window.set_mouse_cursor(cursor)
 label = pyglet.text.Label("SIMON'S WAR",
