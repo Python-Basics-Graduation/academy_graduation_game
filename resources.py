@@ -1,6 +1,7 @@
 import pyglet
 
-pyglet.resource.path = ["/Users/siczek/Python/final_game/git_repos/resources/"]
+path = '/Users/siczek/Python/final_game/git_repos/resources/'
+pyglet.resource.path = [path]
 pyglet.resource.reindex()
 
 cell = pyglet.resource.image("free_cell.png")
