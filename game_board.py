@@ -37,7 +37,6 @@ class Cell(pyglet.sprite.Sprite):
         self.is_clicked = False
 
 
-
 def prepare_batch(window_width, win_height, cell_size):
     batch = pyglet.graphics.Batch()
     position_x, position_y = calculate_board_position(
